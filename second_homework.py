@@ -33,7 +33,8 @@ def calculate_metrics(info: dict) -> dict:
     info_metrics = {}
 
     for department, salaries in info.items():
-        info_metrics[department] = [len(salaries), min(salaries), max(salaries),
+        info_metrics[department] = [len(salaries), min(salaries),
+                                    max(salaries),
                                     sum(salaries) / len(salaries)]
     return info_metrics
 
@@ -60,35 +61,32 @@ def save_statistik(info_metrics: dict, filename: str) -> None:
             writer.writerow([department] + metrics)
 
 
-def main() -> None:
-    """Выводит меню и запрашивает нужный отчёт"""
-    print('1. Вывести иерархию команд')
-    print('2. Вывести сводный отчёт по департаментам')
-    print('3. Сохранить сводный отчёт в CSV')
-
-    try:
-        num = int(input('Выберите пункт меню: '))
-    except ValueError:
-        print('Введите число от 1 до 3')
-        return
-
-    if num not in (1, 2, 3):
-        print('Введите число от 1 до 3')
-        return
+def main(point: int) -> None:
+    """Формирует отчёт по выбранному номеру варианта"""
 
     hierarchy, info = read_file('Corp_Summary.csv')
 
-    if num == 1:
+    if point == 1:
         show_hierarchy(hierarchy)
 
-    elif num == 2:
+    elif point == 2:
         info_metrics = calculate_metrics(info)
         show_statistik(info_metrics)
 
-    elif num == 3:
+    elif point == 3:
         info_metrics = calculate_metrics(info)
         save_statistik(info_metrics, 'information.csv')
 
+    else:
+        print('Введите число от 1 до 3')
+
 
 if __name__ == '__main__':
-    main()
+    print('1. Вывести иерархию команд')
+    print('2. Вывести сводный отчёт по департаментам')
+    print('3. Сохранить сводный отчёт в CSV')
+    try:
+        num = int(input('Выберите пункт меню: '))
+        main(num)
+    except ValueError:
+        print('Введите число от 1 до 3')
